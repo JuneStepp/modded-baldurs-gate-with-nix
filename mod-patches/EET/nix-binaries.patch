@@ -1,0 +1,57 @@
+diff --git a/EET/EET.tp2 b/EET/EET.tp2
+index dfbfb01..81c2bfd 100644
+--- a/EET/EET.tp2
++++ b/EET/EET.tp2
+@@ -197,21 +197,14 @@ ACTION_IF ~%SYSTEM_ARCH%~ STR_EQ ~amd64~ BEGIN
+ END
+ PRINT ~arch_var = %arch_var%~
+ ACTION_FOR_EACH file IN lua weidu BEGIN
+-	ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/bin/%WEIDU_OS%/%arch_var%%file%%exe%~ BEGIN
+-		OUTER_SPRINT EVAL ~%file%~ ~%bin%%MOD_FOLDER%%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%%arch_var%%file%%exe%~
++	ACTION_IF FILE_EXISTS ~%MOD_FOLDER%/bin/nixos/%file%%exe%~ BEGIN
++		OUTER_SPRINT EVAL ~%file%~ ~%bin%%MOD_FOLDER%%os_slash%bin%os_slash%nixos%os_slash%%file%%exe%~
+ 	END ELSE ACTION_IF (NOT ~%arch_var%~ STR_EQ ~~) AND (FILE_EXISTS ~%MOD_FOLDER%/bin/%WEIDU_OS%/%file%%exe%~) BEGIN
+ 		OUTER_SPRINT EVAL ~%file%~ ~%bin%%MOD_FOLDER%%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%%file%%exe%~
+ 	END ELSE BEGIN
+ 		FAIL ~%file% not found~
+ 	END
+ 	OUTER_SPRINT tool EVAL ~%%file%%~
+-	ACTION_IF NOT ~%WEIDU_OS%~ STR_EQ ~win32~ BEGIN
+-		OUTER_SPRINT shell_cmd ~chmod +x %tool%~
+-		AT_NOW ret_val ~%shell_cmd%~ EXACT
+-		ACTION_IF (ret_val != 0) BEGIN
+-			WARN ~Shell command failed to execute: %shell_cmd%~
+-		END
+-	END
+ 	PRINT ~%file% assigned to %tool%~
+ END
+ 
+diff --git a/EET_end/EET_end.tp2 b/EET_end/EET_end.tp2
+index ff9c3d6..5f6d40a 100644
+--- a/EET_end/EET_end.tp2
++++ b/EET_end/EET_end.tp2
+@@ -775,8 +775,8 @@ ACTION_IF ~%SYSTEM_ARCH%~ STR_EQ ~amd64~ BEGIN
+ 	OUTER_SPRINT arch_var ~x86_64%os_slash%~
+ END
+ 
+-ACTION_IF (FILE_EXISTS ~EET/bin/%WEIDU_OS%/%arch_var%weidu%exe%~) BEGIN
+-	OUTER_SPRINT weidu ~%bin%EET%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%%arch_var%weidu%exe%~
++ACTION_IF (FILE_EXISTS ~EET/bin/nixos/weidu%exe%~) BEGIN
++	OUTER_SPRINT weidu ~%bin%EET%os_slash%bin%os_slash%nixos%os_slash%weidu%exe%~
+ END ELSE ACTION_IF (FILE_EXISTS ~EET/bin/%WEIDU_OS%/weidu%exe%~) BEGIN
+ 	OUTER_SPRINT weidu ~%bin%EET%os_slash%bin%os_slash%%WEIDU_OS%%os_slash%weidu%exe%~
+ END ELSE ACTION_IF (FILE_EXISTS ~setup-eet_end%exe%~) BEGIN
+@@ -789,13 +789,6 @@ AT_NOW ret_val ~%shell_cmd%~ EXACT
+ ACTION_IF (ret_val != 0) BEGIN
+ 	WARN ~Shell command failed to execute: %shell_cmd%~
+ END
+-ACTION_IF (NOT ~%WEIDU_OS%~ STR_EQ ~win32~) BEGIN
+-	OUTER_SPRINT shell_cmd ~chmod +x %weidu%~
+-	AT_NOW ret_val ~%shell_cmd%~ EXACT
+-	ACTION_IF (ret_val != 0) BEGIN
+-		WARN ~Shell command failed to execute: %shell_cmd%~
+-	END
+-END
+ OUTER_SPRINT shell_cmd ~%weidu% --noautoupdate --no-auto-tp2 --traify-tlk --min %str_min% --out "%USER_DIRECTORY%%os_slash%save%os_slash%saves.tra"~
+ AT_NOW ret_val ~%shell_cmd%~ EXACT
+ ACTION_IF (ret_val != 0) BEGIN

@@ -1,0 +1,45 @@
+diff --git a/Cargo.toml b/Cargo.toml
+index c0b0da8..aff2e62 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -7,7 +7,7 @@ edition = "2018"
+ # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+ 
+ [dependencies]
+-clap = { git = "https://github.com/clap-rs/clap", tag = "v3.0.0-beta.2" }
++clap = { version = "4.5.20", features = ["derive"] }
+ anyhow = "1.0"
+ once_cell = "1.7.2"
+ ansi_term = "0.12"
+diff --git a/src/main.rs b/src/main.rs
+index 1510ec0..f454fc7 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -2,14 +2,15 @@ use ansi_term::Colour::{Blue, Green, Red, Yellow};
+ use anyhow::anyhow;
+ use anyhow::Error as AnyError;
+ use anyhow::Result;
+-use clap::Clap;
++use clap::Parser;
+ use once_cell::sync::Lazy;
+ use std::ffi::OsStr;
+ use std::path::Path;
+ use glob::glob;
+ 
+-#[derive(Clap)]
+-#[clap(version = "1.0", author = "Mickaël Leduque <mleduque@gmail.com>")]
++
++#[derive(Parser)]
++#[command(version("1.0"), author("Mickaël Leduque <mleduque@gmail.com>"))]
+ struct Opts {
+     source: String,
+     target: String,
+@@ -20,7 +21,7 @@ static WAV_EXT: Lazy<&OsStr> = Lazy::new(|| &OsStr::new("wav"));
+ static NO_EXT: Lazy<&OsStr> = Lazy::new(|| &OsStr::new(""));
+ 
+ fn main() -> Result<()> {
+-    let opts: Opts = Opts::parse();
++    let opts = Opts::parse();
+ 
+     let source = Path::new(&opts.source);
+     let target = Path::new(&opts.target);

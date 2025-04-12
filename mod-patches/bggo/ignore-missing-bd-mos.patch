@@ -1,0 +1,27 @@
+diff --git a/bggo/lib/macros.tpa b/bggo/lib/macros.tpa
+index e20cec8..ae7dc1f 100644
+--- a/bggo/lib/macros.tpa
++++ b/bggo/lib/macros.tpa
+@@ -418,13 +418,15 @@ BEGIN
+ 								PRINT ~Couldn't copy %are%N.mos from bif file~
+ 						END
+ 					END ELSE BEGIN
+-						ACTION_TRY
+-							COPY_EXISTING ~%are2%.mos~ ~%biffdir%/%are2%N.mos~
+-								LPM ~DEBUG~
+-							LAF ~BACKUP_BIFFING~ STR_VAR ext = ~N.mos~ END
+-						WITH
+-							DEFAULT
+-								PRINT ~Couldn't copy %are%.mos to %are%N.mos from bif file~
++						ACTION_IF NOT ((~%are%~ STRING_EQUAL ~BD0010~) OR (~%are%~ STRING_EQUAL ~BD0101~)) BEGIN
++							ACTION_TRY
++								COPY_EXISTING ~%are2%.mos~ ~%biffdir%/%are2%N.mos~
++									LPM ~DEBUG~
++								LAF ~BACKUP_BIFFING~ STR_VAR ext = ~N.mos~ END
++							WITH
++								DEFAULT
++									PRINT ~Couldn't copy %are%.mos to %are%N.mos from bif file~
++							END
+ 						END
+ 					END
+ 				END
