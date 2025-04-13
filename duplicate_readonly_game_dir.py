@@ -1,6 +1,6 @@
 ################################################################
 # Duplicate Steam Baldur's gate Enhanced Editions game folders.
-# Based on https://github.com/adlerosn/cicpoffs
+# Based on https://github.com/mleduque/iedup
 ################################################################
 from pathlib import Path
 import sys
